@@ -7,12 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -129,51 +123,8 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
 
     }
 
-    // public class BluetoothServiceListener implements BluetoothProfile.ServiceListener {
-    //     private String TAG = "bluetoothListener";
-    //     private static final int[] states={
-    //             BluetoothProfile.STATE_CONNECTED};
-    //     @Override
-    //     public void onServiceConnected(int profile, BluetoothProfile bluetoothProfile) {
-    //         List<BluetoothDevice> Devices=bluetoothProfile.getDevicesMatchingConnectionStates(states);
-    //         for (BluetoothDevice device:Devices){
-    //             System.out.println("[BT JAVA: ]" + device.getBluetoothClass().getDeviceClass());
-    //             if(device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO)
-    //             System.out.println("NAME | " + device.getName() + device.getBluetoothClass().getDeviceClass());
-    //         }
-    //     }
-
-    //     @Override
-    //     public void onServiceDisconnected(int profile) {
-    //     }
-
-    // }
-
     private int bluetoothHeadphonesConnectionState() {
-        BluetoothManager myBluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-
-        BluetoothAdapter adapter = myBluetoothManager.getAdapter();
-        List<BluetoothDevice> connected = myBluetoothManager.getConnectedDevices(BluetoothProfile.GATT);
-
-        System.out.println("[Connected Device Size] " + connected.isEmpty() + connected.size());
-
-        for (int i = 0; i<connected.size(); i++){
-            System.out.println("[Connected Device] " + connected.get(i).getName());
-        }
-
-        final Set set = adapter.getBondedDevices();
-
-
-        for (Iterator<BluetoothDevice> it = set.iterator(); it.hasNext(); ) {
-            BluetoothDevice f = it.next();
-            final int deviceClass = f.getBluetoothClass().getDeviceClass();
-
-                System.out.println("[JAVA Device Class]: "+ deviceClass);
-            final int conState = adapter.getProfileConnectionState(BluetoothAdapter.STATE_CONNECTED);
-            System.out.println("connection state headset is "+conState);
-                final boolean isCar = deviceClass == BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO;
-                System.out.println("[JAVA Device Class IS CAR?]: " + isCar);
-        }
+      
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);

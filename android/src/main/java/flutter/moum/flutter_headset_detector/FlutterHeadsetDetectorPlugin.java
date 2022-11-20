@@ -133,6 +133,8 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
 
         for (AudioDeviceInfo deviceInfo : audioDevices) {
             int deviceType = deviceInfo.getType();
+            System.out.println("[JAVA: bluetooth type] ");
+            System.out.println(deviceType);
             if (deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP || deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_SCO ||
                     deviceType == AudioDeviceInfo.TYPE_BLE_HEADSET || deviceType == AudioDeviceInfo.TYPE_BLE_SPEAKER) {
                 return 1;

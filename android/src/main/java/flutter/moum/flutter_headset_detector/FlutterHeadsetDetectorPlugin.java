@@ -1,10 +1,14 @@
 package flutter.moum.flutter_headset_detector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
+
 import android.content.Context;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -12,6 +16,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import androidx.annotation.NonNull;
+
+import android.util.ArraySet;
 import android.util.Log;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -36,13 +42,24 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
 
     private final HeadsetEventListener headsetEventListener = new HeadsetEventListener() {
         @Override
-        public void onWiredHeadsetConnect() {
-            channel.invokeMethod("wired_connected", "true");
+        public void onWiredHeadsetConnect(String name,int micState) {
+            final HashMap args = new HashMap<>();
+            args.put("state", "connected");
+            args.put("name",name);
+            args.put("micState",micState==1 ? true : false);
+            if ((boolean) args.get("micState")){
+                return;
+            }
+            channel.invokeMethod("wired_connected", args);
         }
 
         @Override
-        public void onWiredHeadsetDisconnect() {
-            channel.invokeMethod("wired_disconnected", "true");
+        public void onWiredHeadsetDisconnect(String name,int micState) {
+            final HashMap args = new HashMap<>();
+            args.put("state", "disconnected");
+            args.put("name",name);
+            args.put("micState",micState==1 ? true : false);
+            channel.invokeMethod("wired_disconnected", args);
         }
 
         @Override
@@ -96,9 +113,11 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
 
         for (AudioDeviceInfo deviceInfo : audioDevices) {
             int deviceType = deviceInfo.getType();
-            if (deviceType == AudioDeviceInfo.TYPE_WIRED_HEADPHONES || deviceType == AudioDeviceInfo.TYPE_WIRED_HEADSET
+            System.out.println("[JAVA: device type] ");
+            System.out.println(deviceType);
+            if (deviceType == AudioDeviceInfo.TYPE_WIRED_HEADPHONES /* || deviceType == AudioDeviceInfo.TYPE_WIRED_HEADSET
                     || deviceType == AudioDeviceInfo.TYPE_USB_HEADSET
-                    || deviceType == AudioDeviceInfo.TYPE_USB_DEVICE) {
+                    || deviceType == AudioDeviceInfo.TYPE_USB_DEVICE */) {
                 return 1;
             }
         }
@@ -107,13 +126,16 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
     }
 
     private int bluetoothHeadphonesConnectionState() {
+      
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         AudioDeviceInfo[] audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL);
 
         for (AudioDeviceInfo deviceInfo : audioDevices) {
             int deviceType = deviceInfo.getType();
-            if (deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP || deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_SCO) {
+            System.out.println("[JAVA: bluetooth type] ");
+            System.out.println(deviceType);
+            if (deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP || deviceType == AudioDeviceInfo.TYPE_BLUETOOTH_SCO ) {
                 return 1;
             }
         }

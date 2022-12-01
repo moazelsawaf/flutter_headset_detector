@@ -115,9 +115,9 @@ public class FlutterHeadsetDetectorPlugin implements FlutterPlugin, MethodCallHa
             int deviceType = deviceInfo.getType();
             System.out.println("[JAVA: device type] ");
             System.out.println(deviceType);
-            if (deviceType == AudioDeviceInfo.TYPE_WIRED_HEADPHONES /* || deviceType == AudioDeviceInfo.TYPE_WIRED_HEADSET
+            if (deviceType == AudioDeviceInfo.TYPE_WIRED_HEADPHONES || deviceType == AudioDeviceInfo.TYPE_WIRED_HEADSET
                     || deviceType == AudioDeviceInfo.TYPE_USB_HEADSET
-                    || deviceType == AudioDeviceInfo.TYPE_USB_DEVICE */) {
+                    || deviceType == AudioDeviceInfo.TYPE_USB_DEVICE) {
                 return 1;
             }
         }
